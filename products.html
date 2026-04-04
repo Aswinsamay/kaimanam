@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse our complete collection of authentic South Indian podis, mixes, and pickles. All products are 500g packs made with organic ingredients.">
+    <title>All Products - Kaimanam</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="Assets/logo.png" type="image/png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="Assets/logo.png" alt="Kaimanam Logo">
+                <span>Kaimanam</span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="index.html">Home</a>
+                <a href="products.html" class="active">Products</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            
+            <div class="nav-icons">
+                <a href="cart.html" class="nav-icon">
+                    🛒
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+            
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Our Products</h1>
+            <p>Authentic South Indian delicacies, all 500g packs</p>
+        </div>
+    </section>
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li>Products</li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Products Section -->
+    <section class="products-section">
+        <div class="container">
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-row">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-category="all">All Products</button>
+                        <button class="filter-tab" data-category="podis">Podis</button>
+                        <button class="filter-tab" data-category="mixes">Mixes</button>
+                        <button class="filter-tab" data-category="pickles">Pickles</button>
+                        <button class="filter-tab" data-category="bestsellers">Bestsellers</button>
+                    </div>
+                    <div class="filter-group">
+                        <label>Sort by:</label>
+                        <select onchange="sortProducts(this.value)">
+                            <option value="default">Default</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="name">Name: A to Z</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid" id="products-grid">
+                <!-- Products will be rendered by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <img src="Assets/logo.png" alt="Kaimanam Logo">
+                    <p>Authentic South Indian podis, mixes, and pickles made with organic ingredients and traditional recipes.</p>
+                    <div class="social-links">
+                        <a href="https://wa.me/919790921516" target="_blank" class="social-link">💬</a>
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📸</a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="products.html?category=podis">Podis</a></li>
+                        <li><a href="products.html?category=mixes">Mixes</a></li>
+                        <li><a href="products.html?category=pickles">Pickles</a></li>
+                        <li><a href="products.html?category=bestsellers">Bestsellers</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Contact Us</h4>
+                    <ul class="footer-links">
+                        <li>📞 +91 97909 21516</li>
+                        <li>📧 info@kaimanam.com</li>
+                        <li>📍 Tamil Nadu, India</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Kaimanam. All rights reserved. | Made with ❤️ for authentic taste lovers</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', initProductsPage);
+    </script>
+</body>
+</html>
