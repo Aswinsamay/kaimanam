@@ -6,77 +6,176 @@ Authentic South Indian Podis, Mixes & Pickles
 
 ```
 kaimanam/
-├── Assets/                  # Product images, logo, and menu images
-│   ├── food1.jpg - food17.jpg   # Product images
-│   ├── logo.png             # Brand logo
-│   ├── header_img.jpg       # Hero section background
-│   ├── menu1.jpg - menu4.jpg    # Category images
-│   └── Menu with prices.jpeg    # Price reference
+├── Assets/                     # Product images, logo, and menu images
+│   ├── food1.jpg - food17.jpg  # Product images
+│   ├── logo.png                # Brand logo
+│   ├── header_img.jpg          # Hero section background
+│   ├── menu1.jpg - menu4.jpg   # Category images
+│   └── Menu with prices.jpeg   # Price reference
 ├── css/
-│   └── styles.css           # All website styles
+│   └── styles.css              # All website styles
 ├── js/
-│   ├── products.js          # Product data and helper functions
-│   ├── cart.js              # Cart management & WhatsApp integration
-│   └── main.js              # Main JavaScript functionality
-├── index.html               # Home page
-├── products.html            # All products page
-├── product.html             # Single product detail page
-├── cart.html                # Shopping cart page
-├── checkout.html            # Checkout page with WhatsApp integration
-├── about.html               # About us page
-├── contact.html             # Contact page
-└── README.md                # This file
+│   ├── products.js             # Product data and helper functions
+│   ├── cart.js                 # Cart management
+│   ├── main.js                 # Main JavaScript functionality
+│   ├── firebase-config.js      # Firebase setup & admin config
+│   ├── auth.js                 # Authentication functions
+│   └── orders.js               # Order management functions
+├── index.html                  # Home page
+├── products.html               # All products page
+├── product.html                # Single product detail page
+├── cart.html                   # Shopping cart page
+├── checkout.html               # Checkout page (requires login)
+├── login.html                  # Login / Sign up page
+├── my-orders.html              # Customer order history
+├── order-success.html          # Order confirmation page
+├── admin.html                  # Admin dashboard
+├── about.html                  # About us page
+├── contact.html                # Contact page
+└── README.md                   # This file
 ```
 
 ## 🚀 Getting Started
 
+### Prerequisites
+
+1. **Firebase Project** - Already configured with:
+   - Authentication (Email/Password + Google Sign-in)
+   - Firestore Database
+
 ### Local Development
 
-1. **No installation required!** This is a static HTML website.
-2. Simply open `index.html` in your web browser.
+1. Clone the repository
+2. Open `index.html` in your browser
 3. For better experience, use a local server:
-   - VS Code: Install "Live Server" extension, right-click `index.html` → "Open with Live Server"
-   - Python: Run `python -m http.server 8000` in the project folder
-   - Node.js: Run `npx serve` in the project folder
+   - VS Code: Install "Live Server" extension
+   - Python: `python -m http.server 8000`
+   - Node.js: `npx serve`
 
-### Hosting (Make it Live!)
+### Hosting (Netlify - Recommended)
 
-#### Option 1: Netlify (Recommended - FREE)
+1. Push code to GitHub
+2. Connect repository to [Netlify](https://netlify.com)
+3. Auto-deploys on every push
 
-1. Go to [netlify.com](https://netlify.com) and sign up
-2. Click "Add new site" → "Deploy manually"
-3. Drag and drop the entire `kaimanam` folder
-4. Your site is live! You'll get a URL like `random-name.netlify.app`
-5. (Optional) Add a custom domain in site settings
+---
 
-#### Option 2: Vercel (FREE)
+## 🔐 Authentication System
 
-1. Go to [vercel.com](https://vercel.com) and sign up
-2. Install Vercel CLI: `npm install -g vercel`
-3. Run `vercel` in the project folder
-4. Follow the prompts - your site is live!
+### Features
+- Email/Password signup and login
+- Google Sign-in (one-click)
+- Password reset via email
+- Persistent sessions
 
-#### Option 3: GitHub Pages (FREE)
+### User Flow
+1. Browse products freely
+2. Login required at checkout
+3. Orders linked to user account
+4. View order history in "My Orders"
 
-1. Push your code to a GitHub repository
-2. Go to repository Settings → Pages
-3. Select "main" branch and "/ (root)" folder
-4. Your site is live at `username.github.io/repository-name`
+---
 
-## 📱 How Orders Work
+## 📦 Firebase Database Structure
 
-### Customer Journey:
-1. Customer browses products and adds items to cart
-2. Customer goes to checkout and fills in shipping details
-3. Customer clicks "Place Order via WhatsApp"
-4. WhatsApp opens with pre-filled order message
-5. Customer sends the message to your WhatsApp number
+### Collection: `users`
+```javascript
+{
+  uid: "firebase-user-id",
+  email: "user@example.com",
+  displayName: "John Doe",
+  phone: "9876543210",
+  addresses: [
+    { address: "...", city: "...", state: "...", pincode: "..." }
+  ],
+  orderCount: 5,
+  totalSpent: 2500,
+  createdAt: Timestamp,
+  lastLoginAt: Timestamp
+}
+```
 
-### Order Message Format:
+### Collection: `orders`
+```javascript
+{
+  orderId: "KM-20260404-ABC123",
+  customerId: "firebase-user-id",
+  customerEmail: "user@example.com",
+  customerName: "John Doe",
+  customerPhone: "9876543210",
+  shippingAddress: {
+    address: "123 Main St",
+    city: "Chennai",
+    state: "Tamil Nadu",
+    pincode: "600001"
+  },
+  items: [
+    { productId: 1, name: "Sambar Podi", price: 510, quantity: 2, subtotal: 1020 }
+  ],
+  itemCount: 2,
+  subtotal: 1020,
+  shippingCost: 0,
+  totalAmount: 1020,
+  status: "pending", // pending | confirmed | shipped | delivered | cancelled
+  paymentMethod: "cod",
+  paymentStatus: "pending",
+  notes: "Special instructions...",
+  createdAt: Timestamp,
+  updatedAt: Timestamp
+}
+```
+
+---
+
+## 👨‍💼 Admin Panel
+
+### Access
+- URL: `/admin.html`
+- Only accessible by admin emails configured in `js/firebase-config.js`
+- Current admin: `aswin9866@gmail.com`
+
+### Features
+
+| Feature | Description |
+|---------|-------------|
+| **Dashboard Stats** | Total orders, revenue, pending orders, today's orders |
+| **Order Management** | View all orders, update status, view details |
+| **User Management** | View all registered users and their stats |
+| **Search & Filter** | Filter orders by status, search by ID/name |
+| **Export to CSV** | Download all orders as CSV file |
+
+### Order Status Flow
+```
+Pending → Confirmed → Shipped → Delivered
+    ↓
+Cancelled
+```
+
+### Adding More Admins
+Edit `js/firebase-config.js`:
+```javascript
+const ADMIN_EMAILS = [
+    "aswin9866@gmail.com",
+    "another-admin@gmail.com"  // Add more emails here
+];
+```
+
+---
+
+## 📱 Order Flow
+
+### Customer Journey
+```
+1. Browse Products → 2. Add to Cart → 3. Login/Signup → 4. Checkout
+                                                              ↓
+5. Order Saved to Firebase → 6. WhatsApp Message Opens → 7. Order Confirmation Page
+```
+
+### WhatsApp Message Format
 ```
 🛒 *New Order from Kaimanam Website*
 
-📋 *Order ID:* KM1234ABC
+📋 *Order ID:* KM-20260404-ABC123
 📅 *Date:* 04/04/2026
 
 👤 *Customer Details:*
@@ -85,7 +184,7 @@ Phone: 9876543210
 Email: john@email.com
 
 📍 *Delivery Address:*
-123, Main Street, Landmark
+123 Main Street, Landmark
 Chennai, Tamil Nadu
 PIN: 600001
 
@@ -93,106 +192,39 @@ PIN: 600001
 ━━━━━━━━━━━━━━━
 1. Sambar Podi
    Qty: 2 × ₹510 = ₹1020
-2. Rasam Podi
-   Qty: 1 × ₹485 = ₹485
 ━━━━━━━━━━━━━━━
-💰 *Total Amount: ₹1505*
+💰 *Total Amount: ₹1020*
 
-Payment: Cash on Delivery / To be confirmed
+Payment: Cash on Delivery
 ```
 
-## 👨‍💼 For Business Owner - Managing Orders
+---
 
-### Viewing Orders:
+## 🛠️ Configuration
 
-Orders come directly to your WhatsApp (+91 97909 21516). You can:
-
-1. **WhatsApp Business App** (Recommended)
-   - Download WhatsApp Business from Play Store/App Store
-   - Use your business number
-   - Enable "Labels" to organize orders (New, Processing, Shipped, Delivered)
-   - Use "Quick Replies" for common responses
-
-2. **Order Tracking Spreadsheet**
-   - Create a Google Sheet with columns:
-     - Order ID, Date, Customer Name, Phone, Address, Items, Total, Status
-   - Copy order details from WhatsApp to the sheet
-   - Track order status and delivery
-
-### Responding to Orders:
-
-**Sample Response Messages:**
-
-✅ **Order Confirmed:**
-```
-Hi [Name]! 🙏
-
-Thank you for your order at Kaimanam!
-
-✅ Order ID: [ID] confirmed
-💰 Total: ₹[Amount]
-📦 Estimated delivery: 3-5 business days
-
-We'll share tracking details once shipped.
-
-Questions? Reply here anytime!
+### Changing WhatsApp Number
+Edit `js/products.js`:
+```javascript
+const WHATSAPP_NUMBER = "919790921516";  // Change this
 ```
 
-📦 **Order Shipped:**
-```
-Great news, [Name]! 🎉
-
-Your Kaimanam order has been shipped!
-
-📦 Order ID: [ID]
-🚚 Courier: [Name]
-📝 Tracking: [Number]
-
-Track: [Link]
-
-Enjoy the authentic taste of South India! 🌿
+### Changing Admin Email
+Edit `js/firebase-config.js`:
+```javascript
+const ADMIN_EMAILS = [
+    "your-email@gmail.com"
+];
 ```
 
-## 💰 Future Enhancements
-
-### Phase 2: Payment Gateway (Razorpay)
-
-To add online payments:
-
-1. Sign up at [razorpay.com](https://razorpay.com)
-2. Complete KYC verification
-3. Get API keys from Dashboard → Settings → API Keys
-4. Add Razorpay script to checkout page
-5. Integrate payment flow before WhatsApp message
-
-### Phase 3: WhatsApp Business API
-
-For automated notifications:
-
-1. Apply for WhatsApp Business API access
-2. Use providers like Twilio, Gupshup, or Meta Cloud API
-3. Set up webhook for order confirmations
-4. Automate order status updates to customers
-
-## 🛠️ Customization
-
-### Changing Products:
-
-Edit `js/products.js` to:
+### Changing Products
+Edit `js/products.js`:
 - Update product names, prices, descriptions
 - Add/remove products
 - Change categories
 - Update product images
 
-### Changing Contact Number:
-
-Search and replace `919790921516` in these files:
-- `js/products.js` (WHATSAPP_NUMBER constant)
-- All HTML files (WhatsApp links)
-
-### Changing Colors:
-
-Edit CSS variables in `css/styles.css`:
+### Changing Colors/Theme
+Edit `css/styles.css`:
 ```css
 :root {
     --primary-color: #2d5a27;    /* Main green */
@@ -201,21 +233,94 @@ Edit CSS variables in `css/styles.css`:
 }
 ```
 
-### Adding New Pages:
+---
 
-1. Copy any existing HTML file as template
-2. Update content and navigation
-3. Add link in nav-menu of all pages
+## 🔒 Firebase Security Rules
 
-## 📞 Support
+Add these rules in Firebase Console → Firestore → Rules:
 
-For technical issues with the website:
-- Create an issue on GitHub
-- Or contact the developer
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can read/write their own document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Users can create orders and read their own orders
+    match /orders/{orderId} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null && 
+        (resource.data.customerId == request.auth.uid || 
+         request.auth.token.email in ['aswin9866@gmail.com']);
+      allow update: if request.auth != null && 
+         request.auth.token.email in ['aswin9866@gmail.com'];
+    }
+  }
+}
+```
 
-For business inquiries:
-- WhatsApp: +91 97909 21516
-- Email: info@kaimanam.com
+---
+
+## 💰 Future Enhancements
+
+### Phase 2: Payment Gateway (Razorpay)
+1. Sign up at [razorpay.com](https://razorpay.com)
+2. Complete KYC verification
+3. Get API keys
+4. Integrate payment flow before WhatsApp
+
+### Phase 3: WhatsApp Business API
+1. Apply for WhatsApp Business API access
+2. Use providers like Twilio, Gupshup, or Meta Cloud API
+3. Automate order confirmations to customers
+4. Send shipping updates automatically
+
+### Phase 4: Additional Features
+- Email notifications
+- Order tracking page
+- Wishlist functionality
+- Product reviews
+- Discount coupons
+
+---
+
+## 📊 Viewing Data in Firebase Console
+
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Select "kaimanam-8b7e8" project
+3. **Firestore Database** → View `users` and `orders` collections
+4. **Authentication** → View all registered users
+
+---
+
+## 🐛 Troubleshooting
+
+### "Access Denied" on Admin Page
+- Make sure you're logged in with the admin email
+- Check `js/firebase-config.js` for correct email
+
+### Orders Not Saving
+- Check browser console for errors
+- Verify Firebase config in `js/firebase-config.js`
+- Check Firestore rules allow writes
+
+### Google Sign-in Not Working
+- Enable Google provider in Firebase Console → Authentication
+- Add your domain to authorized domains
+
+### WhatsApp Not Opening
+- Check WHATSAPP_NUMBER format (no + or spaces)
+- Ensure popup blockers are disabled
+
+---
+
+## 📞 Contact
+
+- **Business WhatsApp:** +91 97909 21516
+- **Email:** info@kaimanam.com
+- **Location:** Tamil Nadu, India
 
 ---
 
