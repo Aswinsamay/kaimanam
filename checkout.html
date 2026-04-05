@@ -22,9 +22,22 @@
                 <a href="products.html">Products</a>
                 <a href="about.html">About Us</a>
                 <a href="contact.html">Contact</a>
+                <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
             </nav>
             
             <div class="nav-icons">
+                <!-- Auth Section (shown when logged out) -->
+                <div id="auth-section" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="login.html" class="btn btn-sm btn-outline">Login</a>
+                </div>
+                
+                <!-- User Section (shown when logged in) -->
+                <div id="user-section" style="display: none; align-items: center; gap: 15px;">
+                    <div id="user-avatar"></div>
+                    <span id="user-name-display" style="font-weight: 500;"></span>
+                    <button onclick="logout()" class="btn btn-sm btn-outline">Logout</button>
+                </div>
+                
                 <a href="cart.html" class="nav-icon">
                     🛒
                     <span class="cart-count">0</span>
@@ -54,8 +67,23 @@
         </div>
     </nav>
 
-    <!-- Checkout Section -->
-    <section class="checkout-page">
+    <!-- Login Required Message (shown when not logged in) -->
+    <section id="login-required" class="checkout-page" style="display: none;">
+        <div class="container">
+            <div style="text-align: center; padding: 60px 20px; background: white; border-radius: 12px; max-width: 500px; margin: 0 auto;">
+                <div style="font-size: 4rem; margin-bottom: 20px;">🔐</div>
+                <h2 style="margin-bottom: 15px;">Login Required</h2>
+                <p style="color: var(--text-light); margin-bottom: 25px;">Please login or create an account to complete your order. This helps us track your orders and provide better service.</p>
+                <a href="login.html" class="btn btn-primary btn-lg">Login / Sign Up</a>
+                <p style="margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">
+                    Your cart items will be saved
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout Section (shown when logged in) -->
+    <section id="checkout-section" class="checkout-page" style="display: none;">
         <div class="container">
             <div class="checkout-container">
                 <!-- Checkout Form -->
@@ -63,40 +91,43 @@
                     <form id="checkout-form">
                         <h2>📍 Shipping Information</h2>
                         
+                        <!-- User info pre-filled section -->
+                        <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                                <span>✅</span>
+                                <span>Logged in as <strong id="checkout-user-email"></strong></span>
+                            </p>
+                        </div>
+                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Full Name <span>*</span></label>
-                                <input type="text" name="name" required placeholder="Enter your full name">
+                                <input type="text" name="name" id="checkout-name" required placeholder="Enter your full name">
                             </div>
                             <div class="form-group">
                                 <label>Phone Number <span>*</span></label>
-                                <input type="tel" name="phone" required placeholder="10-digit mobile number">
+                                <input type="tel" name="phone" id="checkout-phone" required placeholder="10-digit mobile number">
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Email Address</label>
-                            <input type="email" name="email" placeholder="your@email.com (optional)">
                         </div>
 
                         <div class="form-group">
                             <label>Street Address <span>*</span></label>
-                            <textarea name="address" required rows="3" placeholder="House/Flat No., Building Name, Street Name, Landmark"></textarea>
+                            <textarea name="address" id="checkout-address" required rows="3" placeholder="House/Flat No., Building Name, Street Name, Landmark"></textarea>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
                                 <label>City <span>*</span></label>
-                                <input type="text" name="city" required placeholder="City">
+                                <input type="text" name="city" id="checkout-city" required placeholder="City">
                             </div>
                             <div class="form-group">
                                 <label>State <span>*</span></label>
-                                <select name="state" required>
+                                <select name="state" id="checkout-state" required>
                                     <option value="">Select State</option>
                                     <option value="Andhra Pradesh">Andhra Pradesh</option>
                                     <option value="Karnataka">Karnataka</option>
                                     <option value="Kerala">Kerala</option>
-                                    <option value="Tamil Nadu" selected>Tamil Nadu</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
                                     <option value="Telangana">Telangana</option>
                                     <option value="Maharashtra">Maharashtra</option>
                                     <option value="Delhi">Delhi</option>
@@ -111,12 +142,12 @@
 
                         <div class="form-group">
                             <label>PIN Code <span>*</span></label>
-                            <input type="text" name="pincode" required placeholder="6-digit PIN code" pattern="[0-9]{6}">
+                            <input type="text" name="pincode" id="checkout-pincode" required placeholder="6-digit PIN code" pattern="[0-9]{6}">
                         </div>
 
                         <div class="form-group">
                             <label>Special Instructions (Optional)</label>
-                            <textarea name="notes" rows="2" placeholder="Any special requests or delivery instructions"></textarea>
+                            <textarea name="notes" id="checkout-notes" rows="2" placeholder="Any special requests or delivery instructions"></textarea>
                         </div>
 
                         <h2 style="margin-top: 30px;">💳 Payment Method</h2>
@@ -142,7 +173,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary btn-lg" id="place-order-btn" style="width: 100%; margin-top: 20px;">
                             💬 Place Order via WhatsApp
                         </button>
                     </form>
@@ -163,7 +194,7 @@
                     
                     <div class="summary-row">
                         <span>Shipping</span>
-                        <span>To be calculated</span>
+                        <span>Free</span>
                     </div>
                     
                     <div class="summary-row total">
@@ -177,7 +208,7 @@
                         </svg>
                         <div>
                             <p><strong>How it works:</strong></p>
-                            <p style="font-size: 0.85rem; margin-top: 5px;">Clicking "Place Order" will open WhatsApp with your order details. Send the message to confirm your order!</p>
+                            <p style="font-size: 0.85rem; margin-top: 5px;">Your order is saved to your account. WhatsApp opens for quick confirmation!</p>
                         </div>
                     </div>
                 </div>
@@ -235,12 +266,135 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- App Scripts -->
     <script src="js/products.js"></script>
+    <script src="js/firebase-config.js"></script>
     <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/orders.js"></script>
     <script src="js/main.js"></script>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', initCheckoutPage);
+        // Check auth state and show appropriate section
+        auth.onAuthStateChanged((user) => {
+            const loginRequired = document.getElementById('login-required');
+            const checkoutSection = document.getElementById('checkout-section');
+            
+            if (user) {
+                // User is logged in - show checkout
+                loginRequired.style.display = 'none';
+                checkoutSection.style.display = 'block';
+                
+                // Pre-fill user info
+                document.getElementById('checkout-user-email').textContent = user.email;
+                document.getElementById('checkout-name').value = user.displayName || '';
+                
+                // Load user's saved address if available
+                loadUserAddress(user.uid);
+                
+                // Render order summary
+                renderCheckoutSummary();
+            } else {
+                // User not logged in - show login required
+                loginRequired.style.display = 'block';
+                checkoutSection.style.display = 'none';
+                
+                // Save redirect URL
+                sessionStorage.setItem('redirectAfterLogin', window.location.href);
+            }
+        });
+        
+        // Load user's saved address
+        async function loadUserAddress(uid) {
+            const userData = await getUserData(uid);
+            if (userData && userData.addresses && userData.addresses.length > 0) {
+                const lastAddress = userData.addresses[userData.addresses.length - 1];
+                document.getElementById('checkout-phone').value = userData.phone || '';
+                document.getElementById('checkout-address').value = lastAddress.address || '';
+                document.getElementById('checkout-city').value = lastAddress.city || '';
+                document.getElementById('checkout-state').value = lastAddress.state || '';
+                document.getElementById('checkout-pincode').value = lastAddress.pincode || '';
+            }
+        }
+        
+        // Handle checkout form submission
+        document.getElementById('checkout-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('place-order-btn');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+            
+            const formData = new FormData(this);
+            
+            const customerData = {
+                name: formData.get('name'),
+                phone: formData.get('phone'),
+                address: formData.get('address'),
+                city: formData.get('city'),
+                state: formData.get('state'),
+                pincode: formData.get('pincode'),
+                notes: formData.get('notes'),
+                paymentMethod: formData.get('payment')
+            };
+            
+            // Validate required fields
+            if (!customerData.name || !customerData.phone || !customerData.address || 
+                !customerData.city || !customerData.state || !customerData.pincode) {
+                showNotification('Please fill in all required fields', 'error');
+                btn.disabled = false;
+                btn.textContent = '💬 Place Order via WhatsApp';
+                return;
+            }
+            
+            // Create order in Firebase
+            const result = await createOrder(customerData);
+            
+            if (result && result.success) {
+                // Save address to user profile
+                const user = getCurrentUser();
+                if (user) {
+                    await saveUserAddress(user.uid, customerData);
+                }
+                
+                // Send to WhatsApp
+                sendOrderToWhatsApp(result.order);
+                
+                // Show success and redirect
+                showNotification('Order placed successfully!', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'order-success.html?orderId=' + result.orderId;
+                }, 1500);
+            } else {
+                btn.disabled = false;
+                btn.textContent = '💬 Place Order via WhatsApp';
+            }
+        });
+        
+        // Save user address for future orders
+        async function saveUserAddress(uid, data) {
+            try {
+                const newAddress = {
+                    address: data.address,
+                    city: data.city,
+                    state: data.state,
+                    pincode: data.pincode
+                };
+                
+                await db.collection('users').doc(uid).update({
+                    phone: data.phone,
+                    addresses: firebase.firestore.FieldValue.arrayUnion(newAddress)
+                });
+            } catch (error) {
+                console.error('Error saving address:', error);
+            }
+        }
     </script>
 </body>
 </html>

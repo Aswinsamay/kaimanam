@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="My Orders - Kaimanam">
+    <title>My Orders - Kaimanam</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="Assets/logo.png" type="image/png">
+    <style>
+        .orders-page {
+            padding: 60px 0;
+            min-height: 60vh;
+        }
+        
+        .orders-list {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: var(--off-white);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .order-header-left h3 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .order-header-left p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-confirmed { background: #cce5ff; color: #004085; }
+        .status-shipped { background: #d4edda; color: #155724; }
+        .status-delivered { background: #28a745; color: white; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        
+        .order-items {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .order-total {
+            font-size: 1.2rem;
+        }
+        
+        .order-total strong {
+            color: var(--primary-color);
+        }
+        
+        .no-orders {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+        }
+        
+        .no-orders svg {
+            width: 80px;
+            height: 80px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        
+        .no-orders h3 {
+            margin-bottom: 10px;
+        }
+        
+        .no-orders p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        
+        .login-required {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="Assets/logo.png" alt="Kaimanam Logo">
+                <span>Kaimanam</span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="index.html">Home</a>
+                <a href="products.html">Products</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
+            </nav>
+            
+            <div class="nav-icons">
+                <div id="auth-section" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="login.html" class="btn btn-sm btn-outline">Login</a>
+                </div>
+                
+                <div id="user-section" style="display: none; align-items: center; gap: 15px;">
+                    <div id="user-avatar"></div>
+                    <span id="user-name-display" style="font-weight: 500;"></span>
+                    <button onclick="logout()" class="btn btn-sm btn-outline">Logout</button>
+                </div>
+                
+                <a href="cart.html" class="nav-icon">
+                    🛒
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+            
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>My Orders</h1>
+            <p>Track and manage your orders</p>
+        </div>
+    </section>
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li>My Orders</li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Orders Section -->
+    <section class="orders-page">
+        <div class="container">
+            <!-- Login Required (shown when not logged in) -->
+            <div id="login-required" class="login-required" style="display: none;">
+                <div style="font-size: 4rem; margin-bottom: 20px;">🔐</div>
+                <h2>Login Required</h2>
+                <p>Please login to view your order history.</p>
+                <a href="login.html" class="btn btn-primary btn-lg">Login / Sign Up</a>
+            </div>
+            
+            <!-- Orders List (shown when logged in) -->
+            <div id="orders-container" style="display: none;">
+                <div class="orders-list" id="orders-list">
+                    <div style="text-align: center; padding: 40px;">Loading your orders...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <img src="Assets/logo.png" alt="Kaimanam Logo">
+                    <p>Authentic South Indian podis, mixes, and pickles made with organic ingredients.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Contact Us</h4>
+                    <ul class="footer-links">
+                        <li>📞 +91 97909 21516</li>
+                        <li>📧 info@kaimanam.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Kaimanam. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/products.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/orders.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        auth.onAuthStateChanged(async (user) => {
+            const loginRequired = document.getElementById('login-required');
+            const ordersContainer = document.getElementById('orders-container');
+            
+            if (user) {
+                loginRequired.style.display = 'none';
+                ordersContainer.style.display = 'block';
+                
+                // Load user's orders
+                const orders = await getUserOrders(user.uid);
+                renderUserOrders(orders);
+            } else {
+                loginRequired.style.display = 'block';
+                ordersContainer.style.display = 'none';
+            }
+        });
+        
+        function renderUserOrders(orders) {
+            const ordersList = document.getElementById('orders-list');
+            
+            if (orders.length === 0) {
+                ordersList.innerHTML = `
+                    <div class="no-orders">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                        <h3>No orders yet</h3>
+                        <p>You haven't placed any orders. Start shopping to see your orders here!</p>
+                        <a href="products.html" class="btn btn-primary">Start Shopping</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            ordersList.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-header-left">
+                            <h3>Order #${order.orderId}</h3>
+                            <p>Placed on ${formatDate(order.createdAt)}</p>
+                        </div>
+                        <span class="status-badge status-${order.status}">${order.status}</span>
+                    </div>
+                    
+                    <div class="order-items">
+                        ${order.items?.map(item => `
+                            <div class="order-item">
+                                <span>${item.name} × ${item.quantity}</span>
+                                <strong>₹${item.subtotal}</strong>
+                            </div>
+                        `).join('') || '<p>No items</p>'}
+                    </div>
+                    
+                    <div class="order-footer">
+                        <div class="order-total">
+                            Total: <strong>₹${order.totalAmount}</strong>
+                        </div>
+                        <div>
+                            <a href="https://wa.me/919790921516?text=Hi, I want to check on my order ${order.orderId}" target="_blank" class="btn btn-sm btn-outline">
+                                💬 Need Help?
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

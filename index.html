@@ -22,9 +22,22 @@
                 <a href="products.html">Products</a>
                 <a href="about.html">About Us</a>
                 <a href="contact.html">Contact</a>
+                <a href="admin.html" id="admin-link" style="display: none;">Admin</a>
             </nav>
             
             <div class="nav-icons">
+                <!-- Auth Section (shown when logged out) -->
+                <div id="auth-section" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="login.html" class="btn btn-sm btn-outline">Login</a>
+                </div>
+                
+                <!-- User Section (shown when logged in) -->
+                <div id="user-section" style="display: none; align-items: center; gap: 15px;">
+                    <div id="user-avatar"></div>
+                    <a href="my-orders.html" style="font-weight: 500;" id="user-name-display"></a>
+                    <button onclick="logout()" class="btn btn-sm btn-outline">Logout</button>
+                </div>
+                
                 <a href="cart.html" class="nav-icon">
                     🛒
                     <span class="cart-count">0</span>
@@ -177,9 +190,16 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- App Scripts -->
     <script src="js/products.js"></script>
+    <script src="js/firebase-config.js"></script>
     <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', initHomePage);
